@@ -27,6 +27,9 @@ jobs:
       - name: Restore packages
         run: npm ci
 
+      - name: Restore local packages
+        run: npm run install-local-packages
+
       - name: Run lint
         run: npm run lint
 

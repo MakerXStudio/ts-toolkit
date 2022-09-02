@@ -10,10 +10,9 @@ module.exports = {
   ],
   rules: {
     'prettier/prettier': 'warn',
-    'node/no-missing-import': 'off',
     'no-console': 'warn',
-    'node/no-unsupported-features/es-syntax': ['error', { ignores: ['modules'] }],
-    '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }],
+    "node/no-unsupported-features/es-syntax": "off",
+    '@typescript-eslint/no-unused-vars': ['warn', { ignoreRestSiblings: true, "argsIgnorePattern": "^_", "destructuredArrayIgnorePattern": "^_"  }],
     'prefer-template': 'error',
   },
 }
