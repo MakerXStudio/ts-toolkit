@@ -28,3 +28,23 @@ npx tstk
 ## Arguments
 
 The default behavior of the cli is to _not_ override existing files. If a file already exists, the cli will output a new file named EXISTING_FILE_NAME.sample. For existing repos you can use this to compare the two files. You can specify the argument `--skip-existing` to modify this behaviour, and simple skip over existing files, or the `--overwrite-existing` argument will cause the cli to overwrite existing files.
+
+## Sub-Packages
+
+### @makerx/eslint-config
+
+A set of default eslint plugins and rules
+
+### @makerx/prettier-config
+
+A default prettier configuration
+
+### @makerx/ts-config
+
+A default tsconfig configuration
+
+## Contributing
+
+### Releasing
+
+Releases are set up to push a new version of each package when the version number is changed. If you don't change the version number, that package will not be re-published
