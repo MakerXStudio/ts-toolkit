@@ -1,6 +1,6 @@
 {
   "name": "@makerx/ts-toolkit",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "This cli facilitates the creation of boilerplate files in a new typescript repo",
   "main": "index.js",
   "bin": {
@@ -14,8 +14,6 @@
   },
   "author": "MakerX",
   "license": "unlicensed",
-  "peerDependencies": {
-  },
   "dependencies": {
     "@colors/colors": "^1.5.0",
     "esm": "^3.2.25"

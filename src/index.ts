@@ -6,7 +6,7 @@ import * as fs from 'fs'
 // @ts-ignore
 import colors from '@colors/colors/safe'
 
-const files = ['.editorconfig', '.eslintignore', '.eslintrc', '.gitattributes', '.gitignore', '.prettierrc', 'tsconfig.json']
+const files = ['.editorconfig', '.eslintignore', '.eslintrc', '.gitattributes', '.gitignore', '.prettierrc.js', 'tsconfig.json']
 
 export function cli(workingDirectory: string, args: string[]) {
   const packageJsonPath = path.join(workingDirectory, 'package.json')
