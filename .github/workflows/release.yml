@@ -31,10 +31,6 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Run tests
-        run: npm test
-
-
       - name: Publish @makerx/eslint-config (if version has been updated)
         uses: JS-DevTools/npm-publish@v1
         with:
