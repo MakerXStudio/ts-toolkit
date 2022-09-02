@@ -48,5 +48,6 @@ export function cli(workingDirectory: string, args: string[]) {
       missingPackages.push(pckg)
     }
   }
-  console.info(`Please run ${colors.cyan(`npm i -D ${missingPackages.join(' ')}`)} to install the missing packages`)
+  if (missingPackages.length)
+    console.info(`Please run ${colors.cyan(`npm i -D ${missingPackages.join(' ')}`)} to install the missing packages`)
 }

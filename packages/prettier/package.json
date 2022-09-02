@@ -1,8 +1,5 @@
 {
   "name": "@makerx/prettier-config",
-  "version": "1.0.0",
-  "main": "index.js",
-  "peerDependencies": {
-    "typescript": ">=2"
-  }
+  "version": "1.0.1",
+  "main": "index.js"
 }

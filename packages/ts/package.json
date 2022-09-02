@@ -1,8 +1,5 @@
 {
   "name": "@makerx/ts-config",
-  "version": "1.0.0",
-  "main": "tsconfig.json",
-  "peerDependencies": {
-    "typescript": ">=4"
-  }
+  "version": "1.0.1",
+  "main": "tsconfig.json"
 }
