@@ -4,6 +4,7 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 lerna-debug.log*
 
 # Dependency directories
@@ -21,6 +22,11 @@ node_modules/
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+# Editor/OS directories and files
+.idea
+.DS_Store
+*.suo
+
 # yarn v2
 .yarn/cache
 .yarn/unplugged
@@ -30,6 +36,7 @@ node_modules/
 
 # Compiled code
 dist/
+build/
 
 # Coverage report
 coverage
@@ -37,3 +44,10 @@ coverage
 # Website & Code docs generation
 code-docs/
 out/
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
