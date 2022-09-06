@@ -14,7 +14,7 @@ export interface InitOptions {
 export function init({ workingDirectory, existingFileBehaviour, noScripts }: InitOptions) {
   const packageJsonPath = path.join(workingDirectory, 'package.json')
   if (!fs.existsSync(packageJsonPath)) {
-    console.error('Could not locate package.json file. tstk should be run in the root of your package.')
+    throw new Error('Could not locate package.json file. tstk should be run in the root of your package.')
   }
   configFiles(workingDirectory, existingFileBehaviour)
   checkPackages(packageJsonPath)
