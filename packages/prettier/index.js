@@ -1,6 +1,6 @@
 module.exports = {
   singleQuote: true,
-  jsxSingleQuote: true,
+  jsxSingleQuote: false,
   semi: false,
   tabWidth: 2,
   trailingComma: 'all',

@@ -13,7 +13,19 @@ const files: ConfigFile[] = [
   { name: '.eslintrc', altNames: ['.eslintrc.js', '.eslintrc.json'] },
   { name: '.gitattributes' },
   { name: '.gitignore' },
-  { name: '.prettierrc.js', altNames: ['.prettierrc'] },
+  {
+    name: '.prettierrc.js',
+    altNames: [
+      '.prettierrc',
+      '.prettierrc.json',
+      '.prettierrc.config.js',
+      '.prettierrc.cjs',
+      '.prettierrc.config.cjs',
+      '.prettierrc.yaml',
+      '.prettierrc.yml',
+      '.prettierrc.toml',
+    ],
+  },
   { name: '.prettierignore' },
   { name: 'tsconfig.json' },
 ]
