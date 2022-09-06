@@ -8,7 +8,7 @@ The files it concerns itself with are:
  - .eslintrc
  - .gitattributes
  - .gitignore
- - .prettierrc
+ - .prettierrc.js
  - tsconfig.json
 
 The cli will output a starter version of these files which can then be extended to suit an individual project's needs. Where possible these files extend a base configuration file in a separate package (eg `@makerx/eslint-config` or `@makerx/prettier-config`). These packages may evolve over time and the latest can be obtained via npm (eg. `npm i -D @makerx/eslint-config@latest`)
