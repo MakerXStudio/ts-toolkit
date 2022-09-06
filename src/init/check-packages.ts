@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { colours } from '../colours'
+import colors from '@colors/colors/safe'
 
 export function checkPackages(packageJsonPath: string) {
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as {
@@ -11,10 +11,10 @@ export function checkPackages(packageJsonPath: string) {
   const missingPackages = []
   for (const pckg of packages) {
     if (packageJson.devDependencies?.[pckg] === undefined) {
-      console.warn(`Missing package ${colours.blue(pckg)}`)
+      console.warn(`Missing package ${colors.blue(pckg)}`)
       missingPackages.push(pckg)
     }
   }
   if (missingPackages.length)
-    console.info(`Please run ${colours.cyan(`npm i -D ${missingPackages.join(' ')}`)} to install the missing packages`)
+    console.info(`Please run ${colors.cyan(`npm i -D ${missingPackages.join(' ')}`)} to install the missing packages`)
 }

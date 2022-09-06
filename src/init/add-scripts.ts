@@ -1,5 +1,5 @@
 import { readJson, writeJson } from '../util/json'
-import { colours } from '../colours'
+import colors from '@colors/colors/safe'
 
 const scripts: Record<string, string> = {
   format: 'prettier --write .',
@@ -12,7 +12,7 @@ export function addScripts(packageFilePath: string) {
   let hasChanged = false
   Object.entries(scripts).forEach(([alias, def]) => {
     if (!packageJson.scripts[alias]) {
-      console.info(`Adding ${colours.cyan(alias)} script to package.json`)
+      console.info(`Adding ${colors.cyan(alias)} script to package.json`)
       packageJson.scripts[alias] = def
       hasChanged = true
     }
