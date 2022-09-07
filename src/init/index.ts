@@ -9,14 +9,20 @@ export interface InitOptions {
   existingFileBehaviour: ExistingFileBehaviour
   workingDirectory: string
   noScripts?: boolean
+  noInstall: boolean
 }
 
-export function init({ workingDirectory, existingFileBehaviour, noScripts }: InitOptions) {
+export async function init({ workingDirectory, existingFileBehaviour, noScripts, noInstall }: InitOptions) {
+  const packageJsonPath = getPackageJsonPath(workingDirectory)
+  configFiles(workingDirectory, existingFileBehaviour)
+  await checkPackages(packageJsonPath, { noInstall })
+  if (noScripts !== true) addScripts(packageJsonPath)
+}
+
+export function getPackageJsonPath(workingDirectory: string) {
   const packageJsonPath = path.join(workingDirectory, 'package.json')
   if (!fs.existsSync(packageJsonPath)) {
     throw new Error('Could not locate package.json file. tstk should be run in the root of your package.')
   }
-  configFiles(workingDirectory, existingFileBehaviour)
-  checkPackages(packageJsonPath)
-  if (noScripts !== true) addScripts(packageJsonPath)
+  return packageJsonPath
 }
