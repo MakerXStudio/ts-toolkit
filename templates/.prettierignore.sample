@@ -10,4 +10,3 @@ coverage
 **/generated/types.ts
 # don't format ide files
 .idea
-.vscode
