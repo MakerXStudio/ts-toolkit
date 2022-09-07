@@ -2,7 +2,7 @@ name: Pull Request
 
 on:
   pull_request:
-    branches: [ 'main' ]
+    branches: ['main']
 
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 16.x, 18.x ]
+        node-version: [16.x, 18.x]
 
     name: Build and test with Node ${{ matrix.node-version }}
     steps:

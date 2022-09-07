@@ -10,3 +10,6 @@ coverage
 # don't lint generated types
 **/generated/types.d.ts
 **/generated/types.ts
+# don't lint ide files
+.idea
+.vscode
