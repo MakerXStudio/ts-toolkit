@@ -1,5 +1,6 @@
-import { ExistingFileBehaviour, init } from './init'
+import { ExistingFileBehaviour, getPackageJsonPath, init } from './init'
 import { Command, Option } from 'commander'
+import { checkPackages } from './init/check-packages'
 
 const program = new Command()
 
@@ -18,8 +19,22 @@ export function cli(workingDirectory: string, args: string[]) {
         .default('node'),
     )
     .option('-ns --no-scripts', "Don't append any scripts to the package.json file")
-    .action(({ existingFileBehaviour, noScripts }) => {
-      init({ workingDirectory, existingFileBehaviour: existingFileBehaviour as ExistingFileBehaviour, noScripts: Boolean(noScripts) })
+    .option('-ni --no-install', "Don't run npm install even if package versions have changed")
+    .action(async ({ existingFileBehaviour, scripts, install }) => {
+      await init({
+        workingDirectory,
+        existingFileBehaviour: existingFileBehaviour as ExistingFileBehaviour,
+        noScripts: !scripts,
+        noInstall: !install,
+      })
+    })
+
+  program
+    .command('check-packages')
+    .description('Checks installed packages match a set of required packages and versions')
+    .option('-ni --no-install', "Don't run npm install even if package versions have changed")
+    .action(async ({ install }) => {
+      await checkPackages(getPackageJsonPath(workingDirectory), { noInstall: !install })
     })
   program.parse(args)
 }
