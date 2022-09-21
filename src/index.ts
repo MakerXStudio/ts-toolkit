@@ -1,6 +1,7 @@
-import { ExistingFileBehaviour, getPackageJsonPath, init } from './init'
 import { Command, Option } from 'commander'
+import { ExistingFileBehaviour, getPackageJsonPath, init } from './init'
 import { checkPackages } from './init/check-packages'
+import { copyPackageJson } from './util/copy-package-json'
 
 const program = new Command()
 
@@ -35,6 +36,18 @@ export function cli(workingDirectory: string, args: string[]) {
     .option('-ni --no-install', "Don't run npm install even if package versions have changed")
     .action(async ({ install }) => {
       await checkPackages(getPackageJsonPath(workingDirectory), { noInstall: !install })
+    })
+
+  program
+    .command('copy-package-json')
+    .description(
+      `Copies package.json into an output folder without the scripts, devDependencies and other non-standard sections you probably don't want in a published package`,
+    )
+    .argument('<inputFolder>', 'The cwd relative or absolute folder path to read package.json')
+    .argument('<outputFolder>', 'The cwd relative or absolute folder path to write the modified package.json')
+    .argument('[extraSections...]', 'Sections you wish to keep, on top of the standard sections, minus scripts and devDependencies')
+    .action((inputFolder, outputFolder, extraSections) => {
+      copyPackageJson(inputFolder, outputFolder, extraSections)
     })
   program.parse(args)
 }
