@@ -20,7 +20,7 @@ It is recommended you commit all pending changes before running the cli so that 
 ## Usage
 
 ```shell
-npx tstk init --existing-file-behaviour <sample|overwrite|skip> --platform <node> --no-scripts
+npx @makerx/ts-toolkit init --existing-file-behaviour <sample|overwrite|skip> --platform <node> --no-scripts
 ```
 
 ## Options
