@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { readJson, writeJson } from './json'
 
-// known sections except scripts, devDependencies, main, types
+// known sections except scripts, devDependencies, main, types and custom sections
 // https://docs.npmjs.com/cli/v8/configuring-npm/package-json
 export const standardSectionWhitelist = [
   'name',
