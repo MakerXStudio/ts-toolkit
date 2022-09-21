@@ -1,9 +1,9 @@
 import { join } from 'path'
 import { readJson, writeJson } from './json'
 
-// everything except scripts, devDependencies
+// known sections except scripts, devDependencies, main, types
 // https://docs.npmjs.com/cli/v8/configuring-npm/package-json
-export const sectionWhitelist = [
+export const standardSectionWhitelist = [
   'name',
   'version',
   'description',
@@ -15,7 +15,6 @@ export const sectionWhitelist = [
   'contributors',
   'funding',
   'files',
-  'main',
   'browser',
   'bin',
   'man',
@@ -35,12 +34,20 @@ export const sectionWhitelist = [
   'publishConfig',
 ]
 
-export const copyPackageJson = (inputFolder: string, outputFolder: string, extraSections: string[] = []) => {
+export const copyPackageJson = (inputFolder: string, outputFolder: string, main: string, types: string, customSections: string[] = []) => {
   const packageJson = readJson(join(inputFolder, 'package.json'))
-  const sectionsToUse = [...sectionWhitelist, ...extraSections]
-  const output = Object.entries(packageJson).reduce<Record<string, unknown>>((acc, [key, value]) => {
-    if (sectionsToUse.includes(key)) acc[key] = value
+  const sectionsToUse = [...standardSectionWhitelist, ...customSections]
+  const output = { main, types, ...pick(packageJson, ...sectionsToUse) }
+  writeJson(join(outputFolder, 'package.json'), output)
+  console.info(`✅ package.json written to: ${outputFolder}`)
+}
+
+/**
+ * Creates an object composed of the picked `object` properties.
+ */
+const pick = <T extends object, U extends keyof T>(object: T, ...props: U[]): Partial<T> => {
+  return Object.entries(object).reduce<Partial<T>>((acc, [key, value]) => {
+    if (props.includes(key as U)) acc[key as U] = value
     return acc
   }, {})
-  writeJson(join(outputFolder, 'package.json'), output)
 }

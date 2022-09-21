@@ -1,4 +1,5 @@
 import { Command, Option } from 'commander'
+import { join } from 'path'
 import { ExistingFileBehaviour, getPackageJsonPath, init } from './init'
 import { checkPackages } from './init/check-packages'
 import { copyPackageJson } from './util/copy-package-json'
@@ -41,16 +42,23 @@ export function cli(workingDirectory: string, args: string[]) {
   program
     .command('copy-package-json')
     .description(
-      `Copies package.json into an output folder without the scripts, devDependencies and other non-standard sections you probably don't want in a published package
-      e.g.:
-        copy-package-json . ./dist
-        copy-package-json . ./dist extraSection1 extraSection2`,
+      `Copies package.json into an output folder without scripts, devDependencies and custom sections you probably don't want in a published package
+      e.g. with defaults:
+        copy-package-json
+      or with all args:
+        copy-package-json --input-folder ./subfolder --output-folder ./dist/subfolder --main 'app.js' --types 'app.d.ts' --custom-sections extraSection1 extraSection2`,
     )
-    .argument('<inputFolder>', 'The cwd relative or absolute folder path to read package.json')
-    .argument('<outputFolder>', 'The cwd relative or absolute folder path to write the modified package.json')
-    .argument('[extraSections...]', 'Sections you wish to keep, on top of the standard sections, minus scripts and devDependencies')
-    .action((inputFolder, outputFolder, extraSections) => {
-      copyPackageJson(inputFolder, outputFolder, extraSections)
+    .option('-if --input-folder <inputFolder>', 'The cwd relative or absolute folder path to read package.json', '.')
+    .option(
+      '-of --output-folder <outputFolder>',
+      'The cwd relative or absolute folder path to write the modified package.json',
+      join('.', 'dist'),
+    )
+    .option('-m --main <main>', 'The main field value', 'index.js')
+    .option('-t --types <types>', 'The types field value', 'index.d.ts')
+    .option('-cs --custom-sections [value...]', 'Custom sections you wish to copy', [])
+    .action(({ inputFolder, outputFolder, main, types, customSections }) => {
+      copyPackageJson(inputFolder, outputFolder, main, types, customSections)
     })
   program.parse(args)
 }
