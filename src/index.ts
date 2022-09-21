@@ -41,7 +41,10 @@ export function cli(workingDirectory: string, args: string[]) {
   program
     .command('copy-package-json')
     .description(
-      `Copies package.json into an output folder without the scripts, devDependencies and other non-standard sections you probably don't want in a published package`,
+      `Copies package.json into an output folder without the scripts, devDependencies and other non-standard sections you probably don't want in a published package
+      e.g.:
+        copy-package-json . ./dist
+        copy-package-json . ./dist extraSection1 extraSection2`,
     )
     .argument('<inputFolder>', 'The cwd relative or absolute folder path to read package.json')
     .argument('<outputFolder>', 'The cwd relative or absolute folder path to write the modified package.json')
