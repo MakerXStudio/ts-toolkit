@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "name": "debug copy-package-json",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run debug -- copy-package-json . ./dist"
+    }
+  ]
+}

@@ -7,6 +7,7 @@
     "tstk": "bin/tstk.js"
   },
   "scripts": {
+    "debug": "ts-node ./src/run-cli",
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist",
     "build:1-compile": "tsc -p tsconfig.json",
