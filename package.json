@@ -1,6 +1,6 @@
 {
   "name": "@makerx/ts-toolkit",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "This cli facilitates the creation of boilerplate files in a new typescript repo",
   "main": "index.js",
   "bin": {
