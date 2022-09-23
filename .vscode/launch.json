@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "name": "copy-package-json (defaults)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run debug -- copy-package-json"
+    },
+    {
+      "name": "copy-package-json (custom args)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run debug -- copy-package-json --output-folder 'blist/nested' --main run.ts --types run.d.ts --custom-sections foo bar devDependencies --custom-sections another"
+    }
+  ]
+}

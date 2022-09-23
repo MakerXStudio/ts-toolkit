@@ -1,12 +1,13 @@
 {
   "name": "@makerx/ts-toolkit",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "This cli facilitates the creation of boilerplate files in a new typescript repo",
   "main": "index.js",
   "bin": {
     "tstk": "bin/tstk.js"
   },
   "scripts": {
+    "debug": "ts-node ./src/run-cli",
     "build": "run-s build:*",
     "build:0-clean": "rimraf dist",
     "build:1-compile": "tsc -p tsconfig.json",
