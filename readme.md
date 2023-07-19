@@ -27,10 +27,11 @@ npx @makerx/ts-toolkit init --existing-file-behaviour <sample|overwrite|skip> --
 
 ### Existing file behaviour (`--existing-file-behaviour` or `-efb`)
 
-This option dictates how existing files are handled.  The default value is sample
- - sample - If a file already exists, write an additional <filename>.sample file
- - overwrite - If a file already exists, overwrite it
- - skip - If a file already exists, skip it
+This option dictates how existing files are handled. The default value is sample
+
+- sample - If a file already exists, write an additional <filename>.sample file
+- overwrite - If a file already exists, overwrite it
+- skip - If a file already exists, skip it
 
 ### Platform (`--platform` or `-p`)
 
@@ -39,7 +40,6 @@ Not used yet, but will be used to output platform specific files. The default va
 ### No Scripts (`--no-scripts` or `-ns`)
 
 If provided, cli will skip adding any scripts to your package.json
-
 
 ## Sub-Packages
 
