@@ -50,14 +50,6 @@ jobs:
           access: 'public'
           check-version: true
 
-      - name: Publish @makerx/ts-config (if version has been updated)
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: 'packages/ts/package.json'
-          access: 'public'
-          check-version: true
-
       - name: Publish @makerx/ts-toolkit (if version has been updated)
         uses: JS-DevTools/npm-publish@v1
         with:

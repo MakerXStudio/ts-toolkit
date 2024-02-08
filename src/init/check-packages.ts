@@ -1,58 +1,81 @@
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import colors from '@colors/colors/safe'
 import { readJson, writeJson } from '../util/json'
 import { compareVersions } from 'compare-versions'
-import fetch from 'cross-fetch'
+import { InitOptions, InitPlatform } from './init-options'
+import { colorConsole } from '../color-console'
+
 const execPromise = promisify(exec)
 
-export async function checkPackages(packageJsonPath: string, { noInstall }: { noInstall: boolean }) {
+const basePackages: Record<string, string> = {
+  '@makerx/eslint-config': 'latest',
+  '@makerx/prettier-config': 'latest',
+  typescript: 'latest',
+  eslint: 'latest',
+  prettier: 'latest',
+  'better-npm-audit': 'latest',
+}
+
+const nodePackages: Record<string, string> = {
+  '@makerx/ts-toolkit': 'latest',
+  '@tsconfig/node20': 'latest',
+  '@types/node': 'latest',
+  '@rollup/plugin-json': 'latest',
+  '@rollup/plugin-node-resolve': 'latest',
+  '@rollup/plugin-typescript': 'latest',
+  'npm-run-all': 'latest',
+  copyfiles: 'latest',
+  rimraf: 'latest',
+  rollup: 'latest',
+  tsx: 'latest',
+  vitest: 'latest',
+}
+
+export async function checkPackages(packageJsonPath: string, { noInstall, platform }: Pick<InitOptions, 'noInstall' | 'platform'>) {
   const packageJson = readJson(packageJsonPath) as {
     devDependencies?: Record<string, string | undefined>
   }
 
   if (packageJson.devDependencies === undefined) packageJson.devDependencies = {}
 
-  const packages: Record<string, string> = {
-    '@makerx/eslint-config': 'latest',
-    '@makerx/prettier-config': 'latest',
-    '@makerx/ts-config': 'latest',
-    typescript: '^4.7.0',
-    eslint: '8.22.0',
-    prettier: 'latest',
+  const packages = {
+    ...basePackages,
+    ...(platform == InitPlatform.Node ? nodePackages : {}),
   }
 
   let hasChanges = false
   for (const [pkgName, version] of Object.entries(packages)) {
-    console.info(`Checking for installed version of ${colors.blue(pkgName)}...`)
+    colorConsole.info`Checking for installed version of ${pkgName}...`
     const targetVersion = version === 'latest' ? await getPackageLatestVersion(pkgName) : version
     if (targetVersion === undefined) continue
     const installedVersion = packageJson.devDependencies[pkgName]
     if (installedVersion === undefined) {
       hasChanges = true
       packageJson.devDependencies[pkgName] = targetVersion
-      console.info(`...adding version ${colors.cyan(targetVersion)}`)
+      colorConsole.info`...adding version ${targetVersion}`
+    } else if (installedVersion.startsWith('file:')) {
+      colorConsole.warn`...found local package install, skipping version check`
     } else {
       if (compareVersions(installedVersion, targetVersion) < 0) {
         hasChanges = true
         packageJson.devDependencies[pkgName] = targetVersion
-        console.info(`...upgrading from version ${colors.cyan(installedVersion)} to ${colors.cyan(targetVersion)}`)
+        colorConsole.info`...upgrading from version ${installedVersion} to ${targetVersion}`
       } else {
-        console.info(`...version ${colors.cyan(installedVersion)} OK`)
+        colorConsole.info`...version ${installedVersion} OK`
       }
     }
   }
   if (hasChanges) {
     writeJson(packageJsonPath, packageJson)
     if (noInstall) {
-      console.info(colors.cyan('Some packages were out of date, please run npm install to update them'))
+      colorConsole.info`Some packages were out of date, please run npm install to update them`
     } else {
-      console.info(colors.cyan('Installing new packages...'))
+      colorConsole.info`Installing new packages...`
       await execPromise('npm install')
-      console.info(colors.cyan('...done'))
+      colorConsole.info`...done`
     }
   } else {
-    console.info('All packages are up to date')
+    colorConsole.info`All packages are up to date`
   }
 }
 
@@ -63,6 +86,6 @@ async function getPackageLatestVersion(packageName: string) {
     const packageMeta = (await response.json()) as { 'dist-tags': { latest: string } }
     return packageMeta['dist-tags'].latest
   }
-  console.error(colors.red(`Unable to fetch latest package meta data for ${packageName}`))
+  colorConsole.error`Unable to fetch latest package meta data for ${packageName}`
   return undefined
 }
