@@ -29,6 +29,7 @@ const nodePackages: Record<string, string> = {
   rollup: 'latest',
   tsx: 'latest',
   vitest: 'latest',
+  '@vitest/coverage-v8': 'latest',
 }
 
 export async function checkPackages(packageJsonPath: string, { noInstall, platform }: Pick<InitOptions, 'noInstall' | 'platform'>) {

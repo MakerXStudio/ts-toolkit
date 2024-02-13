@@ -18,7 +18,9 @@
     "build:3-build": "rollup -c --configPlugin typescript",
     "build:4-copy-pkg-json": "tsx src/bin/run-cli.ts copy-package-json -c .tstoolkitrc.ts",
     "build:5-copy-readme": "copyfiles ./README.md ./dist",
-    "build:6-copy-templates": "copyfiles src/templates/**/* ./dist --all --up 1"
+    "build:6-copy-templates": "copyfiles src/templates/**/* ./dist --all --up 1",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "engines": {
     "node": ">=20.0"
@@ -45,6 +47,7 @@
     "@types/node": "20.11.17",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
+    "@vitest/coverage-v8": "^1.2.2",
     "better-npm-audit": "^3.7.3",
     "copyfiles": "^2.4.1",
     "eslint": "8.56.0",
