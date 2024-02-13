@@ -37,6 +37,7 @@ const baseFiles: ConfigFile[] = [
 ]
 
 const nodeFiles: ConfigFile[] = [
+  { name: '.tstoolkitrc.ts', templateDir: 'node' },
   { name: 'rollup.config.ts', templateDir: 'node' },
   { name: 'tsconfig.json', templateDir: 'node' },
   { name: 'tsconfig.build.json', templateDir: 'node' },
