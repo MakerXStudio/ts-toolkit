@@ -30,6 +30,7 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
 
   const sectionsToUse = [...standardSectionWhitelist, ...(config.customSections ?? [])]
   const output = {
+    scripts: {},
     ...pick(packageJson, ...sectionsToUse),
     main: changeExtensions(config.main, 'js'),
     module: changeExtensions(config.main, 'mjs'),

@@ -7,7 +7,7 @@ const config: TsToolkitConfig = {
     moduleType: 'module',
     main: 'index.ts',
     bin: {
-      '@makerx/ts-toolkit': 'bin/run-cli.ts',
+      'ts-toolkit': 'bin/run-cli.ts',
       tstk: 'bin/run-cli.ts',
     }
   }

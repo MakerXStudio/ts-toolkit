@@ -39,7 +39,7 @@ export const standardSectionWhitelist = [
 export const copyPackageJson = (inputFolder: string, outputFolder: string, main: string, types: string, customSections: string[] = []) => {
   const packageJson = readJson(join(inputFolder, 'package.json'))
   const sectionsToUse = [...standardSectionWhitelist, ...customSections]
-  const output = { main, types, ...pick(packageJson, ...sectionsToUse) }
+  const output = { main, types, scripts: {}, ...pick(packageJson, ...sectionsToUse) }
   writeJson(join(outputFolder, 'package.json'), output)
   colorConsole.info`✅ package.json written to: ${outputFolder}`
 }
