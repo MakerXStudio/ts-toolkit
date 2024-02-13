@@ -30,7 +30,10 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
 
   const sectionsToUse = [...standardSectionWhitelist, ...(config.customSections ?? [])]
   const output = {
+    // Add an empty script block to be a valid package.json
     scripts: {},
+    // Include all files in the package by default
+    files: ['**'],
     ...pick(packageJson, ...sectionsToUse),
     main: changeExtensions(config.main, 'js'),
     module: changeExtensions(config.main, 'mjs'),
