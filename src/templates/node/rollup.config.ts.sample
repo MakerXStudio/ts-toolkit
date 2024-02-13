@@ -3,8 +3,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import typescript from '@rollup/plugin-typescript'
 import json from '@rollup/plugin-json'
 import type { RollupOptions } from 'rollup'
-import pkg from './package.json' with { type: 'json' }
-const typedPackage = pkg as {dependencies?: Record<string, string>, peerDependencies?: Record<string, string>}
+
 const config: RollupOptions = {
   input: ['src/index.ts'],
   output: [
@@ -30,7 +29,7 @@ const config: RollupOptions = {
     propertyReadSideEffects: false,
   },
   // List modules that should not be included in the output bundle (ie. they should remain external dependencies)
-  external: [...Object.keys(typedPackage.dependencies ?? {}) , ...Object.keys(typedPackage.peerDependencies?? {}) ],
+  external: [/node_modules/],
   plugins: [
     typescript({
       tsconfig: 'tsconfig.build.json',
