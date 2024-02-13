@@ -1,6 +1,6 @@
 {
   "name": "@makerx/ts-toolkit",
-  "version": "4.0.0-beta.3",
+  "version": "4.0.0-beta.6",
   "description": "This cli facilitates the creation of boilerplate files in a new typescript repo",
   "type": "module",
   "scripts": {
@@ -18,7 +18,7 @@
     "build:3-build": "rollup -c --configPlugin typescript",
     "build:4-copy-pkg-json": "tsx src/bin/run-cli.ts copy-package-json -c .tstoolkitrc.ts",
     "build:5-copy-readme": "copyfiles ./README.md ./dist",
-    "build:6-copy-templates": "copyfiles src/templates/**/* ./dist --all --up 1",
+    "build:6-copy-templates": "copyfiles --all --up 1 --verbose \"src/templates/**\" ./dist",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
