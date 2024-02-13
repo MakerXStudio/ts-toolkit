@@ -2,6 +2,7 @@
   "name": "@makerx/ts-toolkit",
   "version": "4.0.0-beta.8",
   "description": "This cli facilitates the creation of boilerplate files in a new typescript repo",
+  "repository": "https://github.com/MakerXStudio/ts-toolkit",
   "type": "module",
   "scripts": {
     "audit": "better-npm-audit audit",
@@ -30,7 +31,7 @@
     "access": "public"
   },
   "author": "MakerX",
-  "license": "unlicensed",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^11.0.0",

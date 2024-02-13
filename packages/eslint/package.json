@@ -1,7 +1,9 @@
 {
   "name": "@makerx/eslint-config",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "main": "index.js",
+  "license": "MIT",
+  "repository": "https://github.com/MakerXStudio/ts-toolkit",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
