@@ -55,5 +55,5 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           access: 'public'
-          package: 'package.json'
+          package: 'dist/package.json'
           check-version: true
