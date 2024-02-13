@@ -1,25 +1,32 @@
 import path from 'path'
 import fs from 'fs'
-import colors from '@colors/colors/safe'
+import { ExistingFileBehaviour, InitOptions, InitPlatform } from './init-options'
+import { fileURLToPath } from 'node:url'
+import { colorConsole } from '../color-console'
 
 type ConfigFile = {
   name: string
+  neverReplace?: boolean
   altNames?: string[]
+  templateDir?: string
 }
 
-const files: ConfigFile[] = [
+const baseFiles: ConfigFile[] = [
+  { name: 'readme.md', neverReplace: true },
   { name: '.eslintignore' },
   { name: '.editorconfig' },
   { name: '.eslintrc', altNames: ['.eslintrc.js', '.eslintrc.json'] },
   { name: '.gitattributes' },
   { name: '.gitignore' },
+  { name: '.nsprc' },
   {
-    name: '.prettierrc.js',
+    name: '.prettierrc.cjs',
     altNames: [
       '.prettierrc',
       '.prettierrc.json',
       '.prettierrc.config.js',
       '.prettierrc.cjs',
+      '.prettierrc.js',
       '.prettierrc.config.cjs',
       '.prettierrc.yaml',
       '.prettierrc.yml',
@@ -27,14 +34,13 @@ const files: ConfigFile[] = [
     ],
   },
   { name: '.prettierignore' },
-  { name: 'tsconfig.json' },
 ]
 
-export enum ExistingFileBehaviour {
-  WriteSample = 'sample',
-  Skip = 'skip',
-  Overwrite = 'overwrite',
-}
+const nodeFiles: ConfigFile[] = [
+  { name: 'rollup.config.ts', templateDir: 'node' },
+  { name: 'tsconfig.json', templateDir: 'node' },
+  { name: 'tsconfig.build.json', templateDir: 'node' },
+]
 
 function getExistingFilePath(workingDirectory: string, file: ConfigFile): string | undefined {
   const outFilePath = path.join(workingDirectory, file.name)
@@ -43,27 +49,33 @@ function getExistingFilePath(workingDirectory: string, file: ConfigFile): string
   return file.altNames?.map((altName) => path.join(workingDirectory, altName)).find((altFilePath) => fs.existsSync(altFilePath))
 }
 
-export function configFiles(workingDirectory: string, existingFileBehaviour: ExistingFileBehaviour) {
+const dirName = path.dirname(fileURLToPath(import.meta.url))
+
+function getTemplatePath(configFile: ConfigFile) {
+  return path.join(...[dirName, '../templates', configFile.templateDir || './', `${configFile.name}.sample`])
+}
+
+export function configFiles({ existingFileBehaviour, workingDirectory, platform }: InitOptions) {
+  const files = [...baseFiles, ...(platform == InitPlatform.Node ? nodeFiles : [])]
   for (const file of files) {
-    const templatePath = path.join(__dirname, '../../templates', `${file.name}.sample`)
+    const templatePath = getTemplatePath(file)
     const outFilePath = path.join(workingDirectory, file.name)
     const existingFilePath = getExistingFilePath(workingDirectory, file)
     const templateData = fs.readFileSync(templatePath, 'utf-8')
-    if (existingFilePath && existingFileBehaviour === ExistingFileBehaviour.Skip) {
-      console.info(`Skipping existing file ${colors.green(existingFilePath)}`)
+    if (existingFilePath && (existingFileBehaviour === ExistingFileBehaviour.Skip || file.neverReplace)) {
+      colorConsole.info`Skipping existing file ${existingFilePath}`
       continue
     }
     if (existingFilePath && existingFileBehaviour !== ExistingFileBehaviour.Overwrite) {
-      console.info(
-        `File ${colors.green(existingFilePath)} already exists, writing contents to ${colors.green(`${file.name}.sample`)} instead.`,
-      )
+      colorConsole.info`File ${existingFilePath} already exists, writing contents to ${`${file.name}.sample`} instead.`
+
       fs.writeFileSync(path.join(workingDirectory, `${file.name}.sample`), templateData, 'utf-8')
     } else {
       if (existingFilePath && existingFilePath !== outFilePath) {
-        console.info(`Removing existing file ${colors.yellow(existingFilePath)} as it will be replaced with ${colors.green(outFilePath)})`)
+        colorConsole.info`Removing existing file ${existingFilePath} as it will be replaced with ${outFilePath}`
         fs.rmSync(existingFilePath)
       } else {
-        console.info(`${existingFilePath ? 'Overwriting' : 'Creating'} file ${colors.green(outFilePath)}`)
+        colorConsole.info`${existingFilePath ? 'Overwriting' : 'Creating'} file ${outFilePath}`
       }
       fs.writeFileSync(outFilePath, templateData, 'utf-8')
     }

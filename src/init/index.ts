@@ -1,22 +1,15 @@
 import path from 'path'
 import fs from 'fs'
-import { configFiles, ExistingFileBehaviour } from './config-files'
+import { configFiles } from './config-files'
 import { checkPackages } from './check-packages'
 import { addScripts } from './add-scripts'
-export { ExistingFileBehaviour } from './config-files'
+import { InitOptions } from './init-options'
 
-export interface InitOptions {
-  existingFileBehaviour: ExistingFileBehaviour
-  workingDirectory: string
-  noScripts?: boolean
-  noInstall: boolean
-}
-
-export async function init({ workingDirectory, existingFileBehaviour, noScripts, noInstall }: InitOptions) {
-  const packageJsonPath = getPackageJsonPath(workingDirectory)
-  configFiles(workingDirectory, existingFileBehaviour)
-  await checkPackages(packageJsonPath, { noInstall })
-  if (noScripts !== true) addScripts(packageJsonPath)
+export async function init(options: InitOptions) {
+  const packageJsonPath = getPackageJsonPath(options.workingDirectory)
+  configFiles(options)
+  await checkPackages(packageJsonPath, options)
+  if (options.noScripts !== true) addScripts(packageJsonPath, options)
 }
 
 export function getPackageJsonPath(workingDirectory: string) {
