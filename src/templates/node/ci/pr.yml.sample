@@ -18,3 +18,4 @@ jobs:
       audit-script: npm run audit
       output-test-results: true
       test-script: npm run test:ci
+      run-build: true
