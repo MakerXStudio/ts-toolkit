@@ -66,6 +66,13 @@ function getTemplatePath(configFile: ConfigFile) {
   return path.join(...[dirName, '../templates', configFile.templateDir || './', `${configFile.name}.sample`])
 }
 
+function ensurePath(filePath: string): void {
+  const dirPath = path.dirname(filePath)
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath)
+  }
+}
+
 export function configFiles(options: InitOptions) {
   const { existingFileBehaviour, workingDirectory } = options
   const files = allFiles.filter((f) => f.include(options))
@@ -78,6 +85,7 @@ export function configFiles(options: InitOptions) {
       colorConsole.info`Skipping existing file ${existingFilePath}`
       continue
     }
+    ensurePath(outFilePath)
     if (existingFilePath && existingFileBehaviour !== ExistingFileBehaviour.Overwrite) {
       colorConsole.info`File ${existingFilePath} already exists, writing contents to ${`${file.name}.sample`} instead.`
 
