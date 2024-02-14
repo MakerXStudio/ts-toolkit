@@ -1,4 +1,4 @@
-import {TsToolkitConfig} from "./src";
+import type { TsToolkitConfig } from "@makerx/ts-toolkit";
 
 const config: TsToolkitConfig = {
   packageConfig: {
