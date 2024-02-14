@@ -15,4 +15,5 @@ export interface InitOptions {
   noScripts?: boolean
   noInstall: boolean
   platform?: InitPlatform
+  includeCi?: boolean
 }

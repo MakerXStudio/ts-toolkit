@@ -13,7 +13,17 @@ const program = new Command()
 export function cli(workingDirectory: string, args: string[]) {
   program
     .command('init')
-    .description('Scaffolds several config files into the current working directory')
+    .description(
+      `Scaffolds several config files into the current working directory.
+
+    eg. Init empty node repo
+    init --platform node --include-ci
+
+    eg. Init into existing node repo and overwrite existing config
+    init --platform node -efb overwrite
+
+    `,
+    )
     .addOption(
       new Option('-efb --existing-file-behaviour [action]', 'Defines how existing files are handled.')
         .choices(['sample', 'skip', 'overwrite'])
@@ -24,15 +34,17 @@ export function cli(workingDirectory: string, args: string[]) {
         .choices(['node', 'other'])
         .default('node'),
     )
+    .option('-ci --include-ci', 'Include templates for github ci')
     .option('-ns --no-scripts', "Don't append any scripts to the package.json file")
     .option('-ni --no-install', "Don't run npm install even if package versions have changed")
-    .action(async ({ existingFileBehaviour, scripts, install, platform }) => {
+    .action(async ({ existingFileBehaviour, scripts, install, platform, includeCi }) => {
       await init({
         workingDirectory,
         existingFileBehaviour: existingFileBehaviour as ExistingFileBehaviour,
         noScripts: !scripts,
         noInstall: !install,
         platform: platform as InitPlatform,
+        includeCi: Boolean(includeCi),
       })
     })
 

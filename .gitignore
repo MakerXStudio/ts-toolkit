@@ -49,6 +49,9 @@ build/
 # Coverage report
 coverage
 
+# Test results
+test-results.xml
+
 # Website & Code docs generation
 code-docs/
 out/

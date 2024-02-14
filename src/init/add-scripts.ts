@@ -19,6 +19,7 @@ const nodeScripts: Record<string, string> = {
   'build:5-copy-readme': 'copyfiles ./README.md ./dist',
   test: 'vitest run',
   'test:coverage': 'vitest run --coverage',
+  'test:ci': 'vitest run --coverage --reporter junit --outputFile test-results.xml',
 }
 
 export function addScripts(packageFilePath: string, { platform }: InitOptions) {
