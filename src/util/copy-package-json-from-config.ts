@@ -45,9 +45,9 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
       mapObject(config.exports, (key, value) => [
         key,
         {
+          types: changeExtensions(value, 'd.ts'),
           import: changeExtensions(value, 'mjs'),
           require: changeExtensions(value, 'js'),
-          types: changeExtensions(value, 'd.ts'),
         },
       ]),
   }
@@ -59,6 +59,7 @@ function mapObject<TValue, TNewValue>(obj: Record<string, TValue>, map: (key: st
   return Object.fromEntries(Object.entries(obj).map(([key, value]) => map(key, value)))
 }
 
-function changeExtensions(filePath: string, ext: string): string {
-  return `${path.dirname(filePath)}/${path.basename(filePath).slice(0, -path.extname(filePath).length)}.${ext}`
+export function changeExtensions(filePath: string, ext: string): string {
+  const dirName = path.dirname(filePath)
+  return `${dirName == '.' ? '.' : `./${dirName}`}/${path.basename(filePath).slice(0, -path.extname(filePath).length)}.${ext}`
 }

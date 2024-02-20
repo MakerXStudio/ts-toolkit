@@ -1,6 +1,6 @@
 {
   "name": "@makerx/ts-toolkit",
-  "version": "4.0.0-beta.13",
+  "version": "4.0.0-beta.14",
   "description": "This cli facilitates the creation of boilerplate files in a new typescript repo",
   "repository": "https://github.com/MakerXStudio/ts-toolkit",
   "type": "module",
