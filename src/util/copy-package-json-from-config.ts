@@ -27,6 +27,9 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
   }
 
   const packageJson = readJson(config.packageJsonSource)
+  const exports = config.exports ?? {
+    '.': config.main,
+  }
 
   const sectionsToUse = [...standardSectionWhitelist, ...(config.customSections ?? [])]
   const output = {
@@ -41,13 +44,18 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
     type: config.moduleType,
     bin: config.bin && mapObject(config.bin, (key, value) => [key, changeExtensions(value, config.moduleType == 'module' ? 'mjs' : 'js')]),
     exports:
-      config.exports &&
-      mapObject(config.exports, (key, value) => [
+      exports &&
+      mapObject(exports, (key, value) => [
         key,
         {
-          types: changeExtensions(value, 'd.ts'),
-          import: changeExtensions(value, 'mjs'),
-          require: changeExtensions(value, 'js'),
+          import: {
+            types: changeExtensions(value, 'd.mts'),
+            default: changeExtensions(value, 'mjs'),
+          },
+          require: {
+            types: changeExtensions(value, 'd.ts'),
+            default: changeExtensions(value, 'js'),
+          },
         },
       ]),
   }

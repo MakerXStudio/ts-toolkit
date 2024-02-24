@@ -4,7 +4,7 @@ const config: TsToolkitConfig = {
   packageConfig: {
     srcDir: 'src',
     outDir: 'dist',
-    moduleType: 'module',
+    moduleType: 'commonjs',
     main: 'index.ts',
     bin: {
       'ts-toolkit': 'bin/run-cli.ts',

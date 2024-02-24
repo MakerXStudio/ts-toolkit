@@ -1,8 +1,8 @@
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import typescript from '@rollup/plugin-typescript'
 import json from '@rollup/plugin-json'
-import type { RollupOptions } from 'rollup'
+import type { Plugin, RollupOptions } from 'rollup'
+import ts from 'rollup-plugin-ts'
 
 const config: RollupOptions = {
   input: ['src/index.ts', 'src/bin/run-cli.ts'],
@@ -28,14 +28,13 @@ const config: RollupOptions = {
     moduleSideEffects: false,
     propertyReadSideEffects: false,
   },
-  // List modules that should not be included in the output bundle (ie. they should remain external dependencies)
   external: [/node_modules/],
   plugins: [
-    typescript({
+    ts({
       tsconfig: 'tsconfig.build.json',
     }),
-    commonjs(),
     nodeResolve(),
+    commonjs(),
     json(),
   ],
 }
