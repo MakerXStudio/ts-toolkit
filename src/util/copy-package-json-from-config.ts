@@ -48,14 +48,9 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
       mapObject(exports, (key, value) => [
         key,
         {
-          import: {
-            types: changeExtensions(value, 'd.mts'),
-            default: changeExtensions(value, 'mjs'),
-          },
-          require: {
-            types: changeExtensions(value, 'd.ts'),
-            default: changeExtensions(value, 'js'),
-          },
+          types: changeExtensions(value, 'd.ts'),
+          import: changeExtensions(value, 'mjs'),
+          require: changeExtensions(value, 'js'),
         },
       ]),
   }

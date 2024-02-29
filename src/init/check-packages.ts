@@ -22,7 +22,7 @@ const nodePackages: Record<string, string> = {
   '@types/node': 'latest',
   '@rollup/plugin-json': 'latest',
   '@rollup/plugin-node-resolve': 'latest',
-  'rollup-plugin-ts': 'latest',
+  '@rollup/plugin-typescript': 'latest',
   '@rollup/plugin-commonjs': 'latest',
   'npm-run-all': 'latest',
   copyfiles: 'latest',
