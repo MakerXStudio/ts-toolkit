@@ -11,7 +11,7 @@ const basePackages: Record<string, string> = {
   '@makerx/eslint-config': 'latest',
   '@makerx/prettier-config': 'latest',
   typescript: 'latest',
-  eslint: 'latest',
+  eslint: '8.56.0',
   prettier: 'latest',
   'better-npm-audit': 'latest',
 }
