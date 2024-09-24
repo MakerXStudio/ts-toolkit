@@ -14,6 +14,7 @@ module.exports = {
       'warn',
       { ignoreRestSiblings: true, argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
     ],
+    '@typescript-eslint/no-unused-expressions': 'off',
     'prefer-template': 'error',
   },
 }

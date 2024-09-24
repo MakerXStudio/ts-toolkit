@@ -11,9 +11,13 @@ const basePackages: Record<string, string> = {
   '@makerx/eslint-config': 'latest',
   '@makerx/prettier-config': 'latest',
   typescript: 'latest',
-  eslint: '8.56.0',
+  eslint: 'latest',
   prettier: 'latest',
   'better-npm-audit': 'latest',
+  '@eslint/eslintrc': 'latest',
+  '@eslint/js': 'latest',
+  '@typescript-eslint/eslint-plugin': 'latest',
+  '@typescript-eslint/parser': 'latest',
 }
 
 const nodePackages: Record<string, string> = {

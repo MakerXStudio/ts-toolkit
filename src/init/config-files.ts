@@ -20,9 +20,8 @@ const nodeCiOnly = (options: InitOptions) => nodeOnly(options) && options.includ
 
 const allFiles: ConfigFile[] = [
   { name: 'readme.md', neverReplace: true, include: always },
-  { name: '.eslintignore', include: always },
   { name: '.editorconfig', include: always },
-  { name: '.eslintrc', altNames: ['.eslintrc.js', '.eslintrc.json'], include: always },
+  { name: 'eslint.config.mjs', altNames: ['.eslintrc.js', '.eslintrc.json'], include: always },
   { name: '.gitattributes', include: always },
   { name: '.gitignore', include: always },
   { name: '.nsprc', include: always },
