@@ -18,6 +18,8 @@ const basePackages: Record<string, string> = {
   '@eslint/js': 'latest',
   '@typescript-eslint/eslint-plugin': 'latest',
   '@typescript-eslint/parser': 'latest',
+  'eslint-config-prettier': 'latest',
+  'eslint-plugin-prettier': 'latest',
 }
 
 const nodePackages: Record<string, string> = {

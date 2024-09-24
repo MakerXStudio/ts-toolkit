@@ -5,11 +5,13 @@ import { colorConsole } from '../color-console'
 import { standardSectionWhitelist } from './copy-package-json'
 
 export type ModuleType = 'module' | 'commonjs'
+export type ExportType = 'module' | 'commonjs' | 'both'
 export interface PackageConfig {
   main?: string
   srcDir?: string
   outDir?: string
   exports?: Record<string, string>
+  exportTypes?: ExportType
   bin?: Record<string, string>
   customSections?: string[]
   packageJsonSource?: string
@@ -23,6 +25,7 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
     outDir: 'dist',
     moduleType: 'commonjs' as ModuleType,
     packageJsonSource: 'package.json',
+    exportTypes: 'both' as ExportType,
     ...suppliedConfig,
   }
 
@@ -38,8 +41,8 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
     // Include all files in the package by default
     files: ['**'],
     ...pick(packageJson, ...sectionsToUse),
-    main: changeExtensions(config.main, 'js'),
-    module: changeExtensions(config.main, 'mjs'),
+    main: config.exportTypes !== 'module' ? changeExtensions(config.main, 'js') : undefined,
+    module: config.exportTypes !== 'commonjs' ? changeExtensions(config.main, 'mjs') : undefined,
     types: changeExtensions(config.main, 'd.ts'),
     type: config.moduleType,
     bin: config.bin && mapObject(config.bin, (key, value) => [key, changeExtensions(value, config.moduleType == 'module' ? 'mjs' : 'js')]),
@@ -49,8 +52,8 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
         key,
         {
           types: changeExtensions(value, 'd.ts'),
-          import: changeExtensions(value, 'mjs'),
-          require: changeExtensions(value, 'js'),
+          import: config.exportTypes !== 'commonjs' ? changeExtensions(value, 'mjs') : undefined,
+          require: config.exportTypes !== 'module' ? changeExtensions(value, 'js') : undefined,
         },
       ]),
   }
