@@ -1,33 +1,26 @@
-import globals from "globals";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import globals from 'globals'
+import eslintmakerx from '@makerx/eslint-config/flat.js'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
-
-export default [{
+export default [
+  {
     ignores: [
-        "**/.eslintrc.js",
-        "**/node_modules",
-        "**/dist",
-        "**/build",
-        "**/coverage",
-        "**/generated/types.d.ts",
-        "**/generated/types.ts",
-        "**/.idea",
-        "**/.vscode",
+      '**/.eslintrc.js',
+      '**/node_modules',
+      '**/dist',
+      '**/build',
+      '**/coverage',
+      '**/generated/types.d.ts',
+      '**/generated/types.ts',
+      '**/.idea',
+      '**/.vscode',
     ],
-}, ...compat.extends("@makerx/eslint-config"), {
+  },
+  ...eslintmakerx,
+  {
     languageOptions: {
-        globals: {
-            ...globals.node,
-        },
+      globals: {
+        ...globals.node,
+      },
     },
-}];
+  },
+]
