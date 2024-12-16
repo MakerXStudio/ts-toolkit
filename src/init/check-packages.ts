@@ -14,10 +14,8 @@ const basePackages: Record<string, string> = {
   eslint: 'latest',
   prettier: 'latest',
   'better-npm-audit': 'latest',
-  '@eslint/eslintrc': 'latest',
   '@eslint/js': 'latest',
-  '@typescript-eslint/eslint-plugin': 'latest',
-  '@typescript-eslint/parser': 'latest',
+  'typescript-eslint': 'latest',
   'eslint-config-prettier': 'latest',
   'eslint-plugin-prettier': 'latest',
 }

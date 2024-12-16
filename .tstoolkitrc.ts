@@ -1,4 +1,4 @@
-import {TsToolkitConfig} from "./src";
+import { TsToolkitConfig } from './src'
 
 const config: TsToolkitConfig = {
   packageConfig: {
@@ -9,7 +9,7 @@ const config: TsToolkitConfig = {
     bin: {
       'ts-toolkit': 'bin/run-cli.ts',
       tstk: 'bin/run-cli.ts',
-    }
-  }
+    },
+  },
 }
 export default config

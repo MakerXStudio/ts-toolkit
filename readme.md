@@ -60,11 +60,11 @@ tstk copy-package-json --input-folder ./subfolder --output-folder ./dist/subfold
 
 An alternative option has been added in v4 which takes its arguments from a configuration file. ts-toolkit uses [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig) so any of the compatible formats of cosmiconfig are supported. The recommended approach is to use a typescript file though as it will give you intellisense
 
->>> This feature is very experimental at this stage and may not work as expected for atypical scenarios (ie. ones which do not match this repo)
+> > > This feature is very experimental at this stage and may not work as expected for atypical scenarios (ie. ones which do not match this repo)
 
 ```ts
 /* Sample .tstoolkitrc.ts */
-import {TsToolkitConfig} from "@makerx/ts-toolkit";
+import { TsToolkitConfig } from '@makerx/ts-toolkit'
 
 const config: TsToolkitConfig = {
   packageConfig: {
@@ -75,18 +75,13 @@ const config: TsToolkitConfig = {
     bin: {
       '@makerx/ts-toolkit': 'bin/run-cli.ts',
       tstk: 'bin/run-cli.ts',
-    }
-  }
+    },
+  },
 }
 export default config
 ```
 
 File paths used in this config file should point to the typescript file relative to the source directory. The tool will translate this to relevant js/mjs/d.ts paths in the out directory.
-
-
-
-
-
 
 ## Sub-Packages
 
