@@ -26,14 +26,14 @@ node_modules/
 .DS_Store
 *.suo
 
-# Jetbrains
-.idea/shelf/
-.idea/workspace.xml
-# Editor-based HTTP Client requests
-.idea/httpRequests/
-# Datasource local storage ignored files
-.idea/dataSources/
-.idea/dataSources.local.xml
+# IDE - IntelliJ based
+# Default (ignore everything)
+.idea/*
+# Prettier - run on save
+!.idea/prettier.xml
+# Lint - fix on save
+!.idea/jsLinters/
+!.idea/jsLinters/eslint.xml
 
 # yarn v2
 .yarn/cache
