@@ -1,5 +1,6 @@
 import globals from 'globals'
 import eslintmakerx from '@makerx/eslint-config/flat.js'
+import eslintConfigPrettier from 'eslint-config-prettier/flat'
 
 export default [
   {
@@ -16,6 +17,7 @@ export default [
     ],
   },
   ...eslintmakerx,
+  eslintConfigPrettier,
   {
     languageOptions: {
       globals: {
