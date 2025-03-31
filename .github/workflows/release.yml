@@ -40,7 +40,6 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           package: 'packages/eslint/package.json'
           access: 'public'
-          check-version: true
 
       - name: Publish @makerx/prettier-config (if version has been updated)
         uses: JS-DevTools/npm-publish@v3
@@ -48,7 +47,6 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           package: 'packages/prettier/package.json'
           access: 'public'
-          check-version: true
 
       - name: Publish @makerx/ts-toolkit (if version has been updated)
         uses: JS-DevTools/npm-publish@v3
@@ -56,4 +54,3 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           access: 'public'
           package: 'dist/package.json'
-          check-version: true
