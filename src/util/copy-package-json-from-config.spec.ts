@@ -107,7 +107,7 @@ describe('copyPackageJsonFromConfig', () => {
     const out = readOutput()
     expect(out.exports['.']).toEqual({
       types: './index.d.ts',
-      default: './index.mjs',
+      import: './index.mjs',
     })
     expect(out.main).toBeUndefined()
     expect(out.module).toBe('./index.mjs')
@@ -124,7 +124,7 @@ describe('copyPackageJsonFromConfig', () => {
     const out = readOutput()
     expect(out.exports['.']).toEqual({
       types: './index.d.ts',
-      default: './index.js',
+      require: './index.js',
     })
     expect(out.main).toBe('./index.js')
     expect(out.module).toBeUndefined()

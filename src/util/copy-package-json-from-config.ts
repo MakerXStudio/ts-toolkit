@@ -61,13 +61,13 @@ function buildExportEntry(value: string, exportTypes: ExportType) {
   if (exportTypes === 'module') {
     return {
       types: changeExtensions(value, 'd.ts'),
-      default: changeExtensions(value, 'mjs'),
+      import: changeExtensions(value, 'mjs'),
     }
   }
   if (exportTypes === 'commonjs') {
     return {
       types: changeExtensions(value, 'd.ts'),
-      default: changeExtensions(value, 'js'),
+      require: changeExtensions(value, 'js'),
     }
   }
   // Dual output: per-condition `types` so TypeScript resolves dependency types
