@@ -1,6 +1,6 @@
 {
   "name": "@makerx/ts-toolkit",
-  "version": "4.0.0-beta.24",
+  "version": "5.0.0-beta.0",
   "description": "This cli facilitates the creation of boilerplate files in a new typescript repo",
   "repository": "https://github.com/MakerXStudio/ts-toolkit",
   "type": "module",
@@ -20,6 +20,7 @@
     "build:4-copy-pkg-json": "tsx src/bin/run-cli.ts copy-package-json -c .tstoolkitrc.ts",
     "build:5-copy-readme": "copyfiles ./README.md ./dist",
     "build:6-copy-templates": "copyfiles --all --up 1 --verbose \"src/templates/**\" ./dist",
+    "build:7-check-exports": "attw --pack dist",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage --reporter junit --outputFile test-results.xml",
     "test:ci": "vitest run --coverage --reporter junit --outputFile test-results.xml"
@@ -40,6 +41,7 @@
     "cosmiconfig": "^9.0.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@eslint/js": "^9.23.0",
     "@makerx/eslint-config": "file:packages/eslint",
     "@makerx/prettier-config": "file:packages/prettier",

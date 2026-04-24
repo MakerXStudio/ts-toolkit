@@ -23,6 +23,7 @@ const basePackages: Record<string, string> = {
 
 const nodePackages: Record<string, string> = {
   '@makerx/ts-toolkit': 'latest',
+  '@arethetypeswrong/cli': 'latest',
   '@tsconfig/node20': 'latest',
   '@types/node': 'latest',
   '@rollup/plugin-json': 'latest',

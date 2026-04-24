@@ -1,4 +1,5 @@
 import { readJson, writeJson } from './json'
+import * as fs from 'fs'
 import path, { join } from 'path'
 import { pick } from './pick'
 import { colorConsole } from '../color-console'
@@ -46,19 +47,106 @@ export const copyPackageJsonFromConfig = (suppliedConfig: PackageConfig) => {
     types: changeExtensions(config.main, 'd.ts'),
     type: config.moduleType,
     bin: config.bin && mapObject(config.bin, (key, value) => [key, changeExtensions(value, config.moduleType == 'module' ? 'mjs' : 'js')]),
-    exports:
-      exports &&
-      mapObject(exports, (key, value) => [
-        key,
-        {
-          types: changeExtensions(value, 'd.ts'),
-          import: config.exportTypes !== 'commonjs' ? changeExtensions(value, 'mjs') : undefined,
-          require: config.exportTypes !== 'module' ? changeExtensions(value, 'js') : undefined,
-        },
-      ]),
+    exports: exports && mapObject(exports, (key, value) => [key, buildExportEntry(value, config.exportTypes)]),
   }
   writeJson(join(config.outDir, 'package.json'), output)
   colorConsole.info`✅ package.json written to: ${config.outDir}`
+
+  if (config.exportTypes === 'both') {
+    emitDualDeclarations(config.outDir)
+  }
+}
+
+function buildExportEntry(value: string, exportTypes: ExportType) {
+  if (exportTypes === 'module') {
+    return {
+      types: changeExtensions(value, 'd.ts'),
+      import: changeExtensions(value, 'mjs'),
+    }
+  }
+  if (exportTypes === 'commonjs') {
+    return {
+      types: changeExtensions(value, 'd.ts'),
+      require: changeExtensions(value, 'js'),
+    }
+  }
+  // Dual output: per-condition `types` so TypeScript resolves dependency types
+  // in the matching module system. `import` must come before `require`, and
+  // `types` must come before `default` inside each condition.
+  return {
+    import: {
+      types: changeExtensions(value, 'd.mts'),
+      default: changeExtensions(value, 'mjs'),
+    },
+    require: {
+      types: changeExtensions(value, 'd.cts'),
+      default: changeExtensions(value, 'js'),
+    },
+  }
+}
+
+// Produces .d.mts and .d.cts siblings for every .d.ts in outDir so ESM and
+// CJS consumers each resolve types in their own module system. The .d.mts copy
+// has its extensionless relative imports rewritten to `.js` — TS's node16+ ESM
+// resolution requires explicit extensions on relative specifiers. The .d.cts
+// copy can be content-identical since CJS resolution tolerates either form.
+function emitDualDeclarations(outDir: string) {
+  if (!fs.existsSync(outDir)) return
+  let emitted = 0
+  const walk = (dir: string) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) {
+        walk(full)
+      } else if (entry.isFile() && entry.name.endsWith('.d.ts') && !entry.name.endsWith('.d.mts') && !entry.name.endsWith('.d.cts')) {
+        const base = full.slice(0, -'.d.ts'.length)
+        emitted += emitIfMissing(`${base}.d.mts`, () => rewriteEsmRelativeImports(fs.readFileSync(full, 'utf-8'), path.dirname(full)))
+        emitted += emitIfMissing(`${base}.d.cts`, () => fs.readFileSync(full, 'utf-8'))
+      }
+    }
+  }
+  walk(outDir)
+  if (emitted > 0) {
+    colorConsole.info`✅ Emitted ${String(emitted)} dual declaration file(s) in: ${outDir}`
+  }
+}
+
+function emitIfMissing(destination: string, produceContent: () => string): number {
+  if (fs.existsSync(destination)) return 0
+  fs.writeFileSync(destination, produceContent(), 'utf-8')
+  return 1
+}
+
+// Rewrites relative specifiers in a declaration file for ESM resolution:
+//   from './x'        → from './x.js'           (when ./x.d.ts exists)
+//   from './x'        → from './x/index.js'     (when ./x/index.d.ts exists)
+// Non-relative specifiers, already-extensioned specifiers, and unresolvable
+// paths are left alone. Covers `from '...'`, bare `import '...'`, and
+// dynamic `import('...')` forms — the shapes that appear in .d.ts output.
+export function rewriteEsmRelativeImports(source: string, sourceDir: string): string {
+  const patterns = [
+    /(\bfrom\s*)(['"])(\.{1,2}\/[^'"]+)\2/g,
+    /(\bimport\s+)(['"])(\.{1,2}\/[^'"]+)\2/g,
+    /(\bimport\s*\(\s*)(['"])(\.{1,2}\/[^'"]+)\2/g,
+  ]
+  return patterns.reduce(
+    (acc, pattern) =>
+      acc.replace(pattern, (match, prefix: string, quote: string, spec: string) => {
+        const rewritten = rewriteSpecifier(spec, sourceDir)
+        return rewritten ? `${prefix}${quote}${rewritten}${quote}` : match
+      }),
+    source,
+  )
+}
+
+function rewriteSpecifier(spec: string, sourceDir: string): string | null {
+  if (/\.(m?js|cjs|json|node|d\.m?ts|d\.cts|tsx?|jsx?)$/i.test(spec)) return null
+  const candidate = path.resolve(sourceDir, spec)
+  if (fs.existsSync(`${candidate}.d.ts`) || fs.existsSync(`${candidate}.d.mts`)) return `${spec}.js`
+  if (fs.existsSync(path.join(candidate, 'index.d.ts')) || fs.existsSync(path.join(candidate, 'index.d.mts'))) {
+    return spec.endsWith('/') ? `${spec}index.js` : `${spec}/index.js`
+  }
+  return null
 }
 
 function mapObject<TValue, TNewValue>(obj: Record<string, TValue>, map: (key: string, value: TValue) => [string, TNewValue]) {
