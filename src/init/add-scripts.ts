@@ -17,6 +17,7 @@ const nodeScripts: Record<string, string> = {
   'build:3-build': 'rollup -c --configPlugin typescript',
   'build:4-copy-pkg-json': 'tstk copy-package-json -c',
   'build:5-copy-readme': 'copyfiles ./README.md ./dist',
+  'build:6-check-exports': 'attw --pack dist',
   test: 'vitest run',
   'test:coverage': 'vitest run --coverage',
   'test:ci': 'vitest run --coverage --reporter junit --outputFile test-results.xml',
