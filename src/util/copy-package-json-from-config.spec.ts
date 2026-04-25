@@ -35,10 +35,27 @@ describe('rewriteEsmRelativeImports', () => {
     expect(rewriteEsmRelativeImports(input, dir)).toBe(input)
   })
 
+  it('Resolves file specifiers to .mjs so the .d.mts twin is paired under node16+ resolution', () => {
+    fs.writeFileSync(path.join(dir, 'helper.d.ts'), '', 'utf-8')
+    expect(rewriteEsmRelativeImports(`from './helper'`, dir)).toBe(`from './helper.mjs'`)
+  })
+
   it('Resolves directory specifiers to /index.mjs', () => {
     fs.mkdirSync(path.join(dir, 'sub'))
     fs.writeFileSync(path.join(dir, 'sub', 'index.d.ts'), '', 'utf-8')
     expect(rewriteEsmRelativeImports(`from './sub'`, dir)).toBe(`from './sub/index.mjs'`)
+  })
+
+  it('Resolves when only a .d.mts twin exists alongside the source', () => {
+    fs.writeFileSync(path.join(dir, 'esm-only.d.mts'), '', 'utf-8')
+    expect(rewriteEsmRelativeImports(`from './esm-only'`, dir)).toBe(`from './esm-only.mjs'`)
+  })
+
+  it('Rewrites all three module-specifier shapes in one pass', () => {
+    fs.writeFileSync(path.join(dir, 'helper.d.ts'), '', 'utf-8')
+    const input = [`import { x } from './helper'`, `import './helper'`, `type T = typeof import('./helper').x`].join('\n')
+    const expected = [`import { x } from './helper.mjs'`, `import './helper.mjs'`, `type T = typeof import('./helper.mjs').x`].join('\n')
+    expect(rewriteEsmRelativeImports(input, dir)).toBe(expected)
   })
 
   it('Leaves specifiers that cannot be resolved alone', () => {

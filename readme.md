@@ -83,6 +83,31 @@ export default config
 
 File paths used in this config file should point to the typescript file relative to the source directory. The tool will translate this to relevant js/mjs/d.ts paths in the out directory.
 
+### Dual type declarations (`exportTypes: 'both'`)
+
+When `exportTypes` is `'both'`, the rewritten `package.json` declares per-condition `types` so each consumer resolves declarations in their own module system:
+
+```jsonc
+"exports": {
+  ".": {
+    "import":  { "types": "./index.d.mts", "default": "./index.mjs" },
+    "require": { "types": "./index.d.cts", "default": "./index.js"  }
+  }
+}
+```
+
+For TypeScript to honour those conditions, the `.d.mts` and `.d.cts` files actually have to exist. `copy-package-json` produces them by duplicating each `.d.ts` emitted by the build:
+
+- `*.d.cts` — byte-for-byte copy of `*.d.ts`. CJS resolution accepts extensionless relative specifiers, so no rewriting is needed.
+- `*.d.mts` — copy with relative specifiers rewritten so the resolver pairs each declaration with its `.d.mts` twin rather than the `.d.ts`. Concretely:
+  - `from './foo'` → `from './foo.mjs'` (when `./foo.d.ts` or `./foo.d.mts` exists)
+  - `from './foo'` → `from './foo/index.mjs'` (when `./foo/index.d.ts` exists)
+  - `from './foo.js'`, `from 'some-package'`, and unresolvable paths are left alone.
+
+The reason for `.mjs` (not `.js`): under `moduleResolution: "node16"`/`"nodenext"`, a `.js` specifier inside a `.d.mts` resolves against the adjacent `.d.ts`, which in a dual-published package whose root `package.json` has `"type": "commonjs"` is treated as CJS-flavoured. Strict-ESM consumers then surface type-resolution mismatches. Using `.mjs` keeps the resolution chain in ESM throughout.
+
+If your build already emits `.d.mts`/`.d.cts` directly, `copy-package-json` won't overwrite them — duplication only fills in missing siblings.
+
 ## Sub-Packages
 
 ### @makerx/eslint-config
