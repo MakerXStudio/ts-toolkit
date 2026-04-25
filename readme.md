@@ -101,7 +101,7 @@ For TypeScript to honour those conditions, the `.d.mts` and `.d.cts` files actua
 - `*.d.cts` — byte-for-byte copy of `*.d.ts`. CJS resolution accepts extensionless relative specifiers, so no rewriting is needed.
 - `*.d.mts` — copy with relative specifiers rewritten so the resolver pairs each declaration with its `.d.mts` twin rather than the `.d.ts`. Concretely:
   - `from './foo'` → `from './foo.mjs'` (when `./foo.d.ts` or `./foo.d.mts` exists)
-  - `from './foo'` → `from './foo/index.mjs'` (when `./foo/index.d.ts` exists)
+  - `from './foo'` → `from './foo/index.mjs'` (when `./foo/index.d.ts` or `./foo/index.d.mts` exists)
   - `from './foo.js'`, `from 'some-package'`, and unresolvable paths are left alone.
 
 The reason for `.mjs` (not `.js`): under `moduleResolution: "node16"`/`"nodenext"`, a `.js` specifier inside a `.d.mts` resolves against the adjacent `.d.ts`, which in a dual-published package whose root `package.json` has `"type": "commonjs"` is treated as CJS-flavoured. Strict-ESM consumers then surface type-resolution mismatches. Using `.mjs` keeps the resolution chain in ESM throughout.

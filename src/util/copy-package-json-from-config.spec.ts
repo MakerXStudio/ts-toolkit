@@ -51,6 +51,12 @@ describe('rewriteEsmRelativeImports', () => {
     expect(rewriteEsmRelativeImports(`from './esm-only'`, dir)).toBe(`from './esm-only.mjs'`)
   })
 
+  it('Resolves directory specifiers when only an index.d.mts is present', () => {
+    fs.mkdirSync(path.join(dir, 'esm-sub'))
+    fs.writeFileSync(path.join(dir, 'esm-sub', 'index.d.mts'), '', 'utf-8')
+    expect(rewriteEsmRelativeImports(`from './esm-sub'`, dir)).toBe(`from './esm-sub/index.mjs'`)
+  })
+
   it('Rewrites all three module-specifier shapes in one pass', () => {
     fs.writeFileSync(path.join(dir, 'helper.d.ts'), '', 'utf-8')
     const input = [`import { x } from './helper'`, `import './helper'`, `type T = typeof import('./helper').x`].join('\n')

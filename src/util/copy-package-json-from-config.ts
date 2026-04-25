@@ -119,8 +119,8 @@ function emitIfMissing(destination: string, produceContent: () => string): numbe
 }
 
 // Rewrites relative specifiers in a declaration file for ESM resolution:
-//   from './x'        → from './x.mjs'          (when ./x.d.ts exists)
-//   from './x'        → from './x/index.mjs'    (when ./x/index.d.ts exists)
+//   from './x'        → from './x.mjs'          (when ./x.d.ts or ./x.d.mts exists)
+//   from './x'        → from './x/index.mjs'    (when ./x/index.d.ts or ./x/index.d.mts exists)
 // The .mjs extension pairs the specifier with the adjacent .d.mts declaration
 // under TS's node16+ resolver; using .js would resolve against the .d.ts
 // (CJS-flavoured in a dual-published package) and surface as type errors in
