@@ -35,10 +35,33 @@ describe('rewriteEsmRelativeImports', () => {
     expect(rewriteEsmRelativeImports(input, dir)).toBe(input)
   })
 
-  it('Resolves directory specifiers to /index.js', () => {
+  it('Resolves file specifiers to .mjs so the .d.mts twin is paired under node16+ resolution', () => {
+    fs.writeFileSync(path.join(dir, 'helper.d.ts'), '', 'utf-8')
+    expect(rewriteEsmRelativeImports(`from './helper'`, dir)).toBe(`from './helper.mjs'`)
+  })
+
+  it('Resolves directory specifiers to /index.mjs', () => {
     fs.mkdirSync(path.join(dir, 'sub'))
     fs.writeFileSync(path.join(dir, 'sub', 'index.d.ts'), '', 'utf-8')
-    expect(rewriteEsmRelativeImports(`from './sub'`, dir)).toBe(`from './sub/index.js'`)
+    expect(rewriteEsmRelativeImports(`from './sub'`, dir)).toBe(`from './sub/index.mjs'`)
+  })
+
+  it('Resolves when only a .d.mts twin exists alongside the source', () => {
+    fs.writeFileSync(path.join(dir, 'esm-only.d.mts'), '', 'utf-8')
+    expect(rewriteEsmRelativeImports(`from './esm-only'`, dir)).toBe(`from './esm-only.mjs'`)
+  })
+
+  it('Resolves directory specifiers when only an index.d.mts is present', () => {
+    fs.mkdirSync(path.join(dir, 'esm-sub'))
+    fs.writeFileSync(path.join(dir, 'esm-sub', 'index.d.mts'), '', 'utf-8')
+    expect(rewriteEsmRelativeImports(`from './esm-sub'`, dir)).toBe(`from './esm-sub/index.mjs'`)
+  })
+
+  it('Rewrites all three module-specifier shapes in one pass', () => {
+    fs.writeFileSync(path.join(dir, 'helper.d.ts'), '', 'utf-8')
+    const input = [`import { x } from './helper'`, `import './helper'`, `type T = typeof import('./helper').x`].join('\n')
+    const expected = [`import { x } from './helper.mjs'`, `import './helper.mjs'`, `type T = typeof import('./helper.mjs').x`].join('\n')
+    expect(rewriteEsmRelativeImports(input, dir)).toBe(expected)
   })
 
   it('Leaves specifiers that cannot be resolved alone', () => {
@@ -190,14 +213,14 @@ describe('copyPackageJsonFromConfig', () => {
     })
 
     const mtsContents = fs.readFileSync(path.join(outDir, 'index.d.mts'), 'utf-8')
-    expect(mtsContents).toContain(`from './util/helper.js'`)
-    expect(mtsContents).toContain(`import('./util/helper.js')`)
+    expect(mtsContents).toContain(`from './util/helper.mjs'`)
+    expect(mtsContents).toContain(`import('./util/helper.mjs')`)
     expect(mtsContents).not.toContain(`from './util/helper'`)
 
     // The .d.cts should be content-identical to the original .d.ts
     const ctsContents = fs.readFileSync(path.join(outDir, 'index.d.cts'), 'utf-8')
     expect(ctsContents).toContain(`from './util/helper'`)
-    expect(ctsContents).not.toContain(`from './util/helper.js'`)
+    expect(ctsContents).not.toContain(`from './util/helper.mjs'`)
   })
 
   it('Does not emit dual declarations in single-flavor modes', () => {

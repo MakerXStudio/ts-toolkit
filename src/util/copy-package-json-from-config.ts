@@ -87,9 +87,10 @@ function buildExportEntry(value: string, exportTypes: ExportType) {
 
 // Produces .d.mts and .d.cts siblings for every .d.ts in outDir so ESM and
 // CJS consumers each resolve types in their own module system. The .d.mts copy
-// has its extensionless relative imports rewritten to `.js` — TS's node16+ ESM
-// resolution requires explicit extensions on relative specifiers. The .d.cts
-// copy can be content-identical since CJS resolution tolerates either form.
+// has its extensionless relative imports rewritten to `.mjs` so that TS's
+// node16+ ESM resolution pairs each declaration with its .d.mts twin rather
+// than the CJS-flavoured .d.ts. The .d.cts copy can be content-identical
+// since CJS resolution tolerates extensionless specifiers.
 function emitDualDeclarations(outDir: string) {
   if (!fs.existsSync(outDir)) return
   let emitted = 0
@@ -118,11 +119,14 @@ function emitIfMissing(destination: string, produceContent: () => string): numbe
 }
 
 // Rewrites relative specifiers in a declaration file for ESM resolution:
-//   from './x'        → from './x.js'           (when ./x.d.ts exists)
-//   from './x'        → from './x/index.js'     (when ./x/index.d.ts exists)
-// Non-relative specifiers, already-extensioned specifiers, and unresolvable
-// paths are left alone. Covers `from '...'`, bare `import '...'`, and
-// dynamic `import('...')` forms — the shapes that appear in .d.ts output.
+//   from './x'        → from './x.mjs'          (when ./x.d.ts or ./x.d.mts exists)
+//   from './x'        → from './x/index.mjs'    (when ./x/index.d.ts or ./x/index.d.mts exists)
+// The .mjs extension pairs the specifier with the adjacent .d.mts declaration
+// under TS's node16+ resolver; using .js would resolve against the .d.ts
+// (CJS-flavoured in a dual-published package) and surface as type errors in
+// strict ESM consumers. Non-relative specifiers, already-extensioned
+// specifiers, and unresolvable paths are left alone. Covers `from '...'`,
+// bare `import '...'`, and dynamic `import('...')` forms.
 export function rewriteEsmRelativeImports(source: string, sourceDir: string): string {
   const patterns = [
     /(\bfrom\s*)(['"])(\.{1,2}\/[^'"]+)\2/g,
@@ -142,9 +146,9 @@ export function rewriteEsmRelativeImports(source: string, sourceDir: string): st
 function rewriteSpecifier(spec: string, sourceDir: string): string | null {
   if (/\.(m?js|cjs|json|node|d\.m?ts|d\.cts|tsx?|jsx?)$/i.test(spec)) return null
   const candidate = path.resolve(sourceDir, spec)
-  if (fs.existsSync(`${candidate}.d.ts`) || fs.existsSync(`${candidate}.d.mts`)) return `${spec}.js`
+  if (fs.existsSync(`${candidate}.d.ts`) || fs.existsSync(`${candidate}.d.mts`)) return `${spec}.mjs`
   if (fs.existsSync(path.join(candidate, 'index.d.ts')) || fs.existsSync(path.join(candidate, 'index.d.mts'))) {
-    return spec.endsWith('/') ? `${spec}index.js` : `${spec}/index.js`
+    return spec.endsWith('/') ? `${spec}index.mjs` : `${spec}/index.mjs`
   }
   return null
 }
