@@ -15,7 +15,7 @@ jobs:
     name: Release package to NPM
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
